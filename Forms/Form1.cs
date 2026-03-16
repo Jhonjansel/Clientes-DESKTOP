@@ -15,31 +15,36 @@ using System.Windows.Forms;
 namespace Clientes_DESKTOP
 {
     public partial class Form1 : Form
-    {
+    {   // Servicio que maneja la lógica de negocio de clientes
         private readonly ClienteService clientService;
+        // Servicio encargado de importar clientes desde CSV o JSON
         private readonly ImportService importService;
+        // Lista enlazada al DataGridView para reflejar cambios automáticamente
         private BindingList<Cliente> clients;
         public Form1()
         {
             InitializeComponent();
+            // Crear repositorio y servicios
             var repo = new JsonClienteRepository();
             clientService = new ClienteService(repo);
             importService = new ImportService();
+            // Eventos del DataGridView para validación y manejo de errores
             dgvClients.CellEndEdit += dgvClients_CellEndEdit;
             dgvClients.DataError += dgvClients_DataError;
             dgvClients.CellValidating += dgvClients_CellValidating;
-            LoadClients();
+            LoadClients(); // Cargar clientes al iniciar la aplicación
         }
-
+        // Carga los clientes en el DataGridView
         private void LoadClients()
         {
             var list = clientService.GetClients();
+            // BindingList permite que el DataGridView se actualice automáticamente
             clients = new BindingList<Cliente>(list);
             dgvClients.DataSource = null;
             dgvClients.DataSource = clients;
            
         }
-
+        // Importar clientes desde un archivo CSV
         private async void btnImportCsv_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -71,7 +76,7 @@ namespace Clientes_DESKTOP
                 MessageBox.Show("Importación CSV completada");
             }
         }
-
+        // Importar clientes desde archivo JSON
         private async void btnImportJson_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -109,7 +114,7 @@ namespace Clientes_DESKTOP
            // clientService.Save();
             // base.OnFormClosing(e);
         }
-
+        // Eliminar cliente seleccionado
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (dgvClients.CurrentRow == null || dgvClients.CurrentRow.IsNewRow)
@@ -125,16 +130,16 @@ namespace Clientes_DESKTOP
 
             if (confirm == DialogResult.Yes)
             {
-
+                // Eliminar cliente del servicio json
                 clientService.DeleteClient(client);
-
+                // Eliminar de la lista enlazada
                 clients.Remove(client);
-
+                // Guardar cambios en json
                 clientService.Save();
                 LoadClients();
             }
         }
-
+        // Permite eliminar con la tecla Delete
         private void btnDelete_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -142,7 +147,7 @@ namespace Clientes_DESKTOP
                 btnDelete_Click(null, null);
             }
         }
-
+        // Validación de datos cuando se edita una celda
         private void dgvClients_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var columnName = dgvClients.Columns[e.ColumnIndex].Name;
@@ -197,14 +202,14 @@ namespace Clientes_DESKTOP
 
             }
         }
-
+        // Se ejecuta cuando termina la edición de una celda
         private void dgvClients_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             var client = (Cliente)dgvClients.Rows[e.RowIndex].DataBoundItem;
             clientService.UpdateClient(client);
             clientService.Save();
         }
-
+        // Maneja errores del DataGridView
         private void dgvClients_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
