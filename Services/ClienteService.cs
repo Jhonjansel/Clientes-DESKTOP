@@ -12,25 +12,43 @@ namespace Clientes_DESKTOP.Services
     public class ClienteService
     {
         private readonly ClienteRepository repository;
-
-        public ClienteService(ClienteRepository repository)
+        private List<Cliente> clients;
+        public ClienteService(ClienteRepository repo)
         {
-            this.repository = repository;
+            repository = repo;
+            clients = repository.GetAll();
         }
 
-        public List<Cliente> ObtenerClientes()
+        public List<Cliente> GetClients()
         {
-            return repository.GetAll();
+            return clients;
         }
 
-        public void CrearCliente(Cliente cliente)
+        public void CreateClient(Cliente client)
         {
-            repository.Add(cliente);
+            clients.Add(client);
         }
 
-        public void EliminarCliente(string dni)
+        public void DeleteClient(Cliente client)
         {
-            repository.Delete(dni);
+            clients.Remove(client);
+        }
+        public void Save()
+        {
+            repository.SaveAll(clients);
+        }
+        public void UpdateClient(Cliente clientUpdate)
+        {
+            var client = clients.FirstOrDefault(c => c.DNI == clientUpdate.DNI);
+
+            if (client != null)
+            {
+                client.Nombre = clientUpdate.Nombre;
+                client.Apellidos = clientUpdate.Apellidos;
+                client.FechaNacimiento = clientUpdate.FechaNacimiento;
+                client.Telefono = clientUpdate.Telefono;
+                client.Email = clientUpdate.Email;
+            }
         }
     }
 }

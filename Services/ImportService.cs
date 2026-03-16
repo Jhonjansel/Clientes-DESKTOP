@@ -13,13 +13,13 @@ namespace Clientes_DESKTOP.Services
         public List<Cliente> ImportCsv(string path)
         {
             var lines = File.ReadAllLines(path).Skip(1);
-            var clientes = new List<Cliente>();
+            var clients = new List<Cliente>();
 
             foreach (var line in lines)
             {
                 var parts = line.Split(',');
 
-                clientes.Add(new Cliente
+                clients.Add(new Cliente
                 {
                     DNI = parts[0],
                     Nombre = parts[1],
@@ -30,7 +30,7 @@ namespace Clientes_DESKTOP.Services
                 });
             }
 
-            return clientes;
+            return clients;
         }
 
         public List<Cliente> ImportJson(string path)

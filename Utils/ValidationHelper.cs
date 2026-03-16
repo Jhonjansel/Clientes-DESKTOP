@@ -9,19 +9,24 @@ namespace Clientes_DESKTOP.Utils
 {
     public static class ValidationHelper
     {
-        public static bool ValidEmail(string email)
+        public static bool EmailValid(string email)
         {
-            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return Regex.IsMatch(email, @"^\S+@\S+\.\S+$");
         }
 
-        public static bool ValidPhone(string phone)
+        public static bool PhoneValid(string phone)
         {
-            return phone.Length >= 7;
+            return Regex.IsMatch(phone, @"^[0-9]{9}$");
         }
 
-        public static bool ValidDNI(string dni)
+        public static bool DniValid(string dni)
         {
             return !string.IsNullOrWhiteSpace(dni);
+        }
+
+        public static bool DateValid(string date)
+        {
+            return DateTime.TryParse(date, out _);
         }
     }
 }

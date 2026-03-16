@@ -55,10 +55,8 @@
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\JsonClienteRepository.cs" />
     <Compile Include="Services\ClienteService.cs" />
     <Compile Include="Services\ImportService.cs" />
     <Compile Include="Utils\ValidationHelper.cs" />
